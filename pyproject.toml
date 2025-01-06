@@ -1,0 +1,10 @@
+[project]
+name = "learn-python-grading-journal"
+version = "0.1.0"
+description = "School digital grading book service backend created for learning purposes"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[all]>=0.115.6",
+    "sqlalchemy>=2.0.36",
+]
