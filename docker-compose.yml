@@ -1,0 +1,9 @@
+services:
+  grading-journal-postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: grading_journal
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: grading_journal
+    ports:
+      - "15432:5432"
