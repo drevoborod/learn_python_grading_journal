@@ -1,67 +1,23 @@
-from datetime import datetime
-from typing import Optional
+import asyncio
 
-from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, Session
-
-
-class Base(DeclarativeBase):
-    pass
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 
-class Pupil(Base):
-    __tablename__ = "pupils"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    first_name: Mapped[str]
-    last_name: Mapped[str]
-    second_name: Mapped[Optional[str]]
-    birth_date: Mapped[Optional[datetime]]
-    social_ensurance_id: Mapped[Optional[str]]
+from grading_journal.database import Base
+from grading_journal.config import create_config
 
 
-class EducationalGroup(Base):
-    __tablename__ = "educational_groups"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
-
-
-class EducationalSubject(Base):
-    __tablename__ = "educational_subjects"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
-
-
-class Grade(Base):
-    __tablename__ = "grades"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    value: Mapped[int]
-
-
-class PupilGroup(Base):
-    __tablename__ = "pupil_group"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    pupil_id = mapped_column(ForeignKey(Pupil.id))
-    group_id = mapped_column(ForeignKey(EducationalGroup.id))
-
-
-class PupilSubjectGrade(Base):
-    __tablename__ = "pupil_subject_grade"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    pupil_id = mapped_column(ForeignKey(Pupil.id))
-    subject_id = mapped_column(ForeignKey(EducationalSubject.id))
-    grade_id = mapped_column(ForeignKey(Grade.id))
-
-
-def create_tables(engine):
-    Base.metadata.create_all(engine)
+async def create_tables(engine: AsyncEngine, base_class: type[DeclarativeBase]):
+    async with engine.begin() as connection:
+        await connection.run_sync(base_class.metadata.create_all)
 
 
 if __name__ == "__main__":
-    engine = create_engine("postgresql+psycopg2://grading_journal:postgres@localhost:15432/grading_journal", echo=True)
-    create_tables(engine)
+    config = create_config()
+    engine = create_async_engine(
+        f"{config.db_driver_for_alchemy}://{config.db_user}:{config.db_password}@"
+        f"{config.db_address}:{config.db_port}/{config.db_name}",
+        echo=True,
+    )
+    asyncio.run(create_tables(engine, Base))
