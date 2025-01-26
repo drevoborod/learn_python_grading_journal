@@ -66,7 +66,7 @@ async def main():
     print([g.name for g in groups])
     print([p.last_name for p in pupils])
     print([s.name for s in g_subject])
-    print([(grade.value, grade.educational_subject.name) for grade in grades])
+    print([(grade.value, grade.educational_subject.name, grade.pupil.first_name, grade.pupil.last_name) for grade in grades])
 
 
 

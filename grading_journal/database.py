@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import ForeignKey, Table, Column, DateTime
+from sqlalchemy import ForeignKey, Table, Column, DateTime, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -66,10 +66,10 @@ class Grades(Base):
     educational_subject_id = mapped_column(ForeignKey(EducationalSubjects.id))
     pupil_id = mapped_column(ForeignKey(Pupils.id))
     value: Mapped[int]
-    created_at: Mapped[datetime]
+    created_at = Column(DateTime, nullable=False, server_default=text("NOW()"))
 
-    # pupils: Mapped[Pupils] = relationship(back_populates="grades")
-    educational_subject: Mapped[EducationalSubjects] = relationship()
+    pupil: Mapped[Pupils] = relationship(lazy="selectin")
+    educational_subject: Mapped[EducationalSubjects] = relationship(lazy="selectin")
 
 
 # class PupilsGroups(Base):
