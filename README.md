@@ -17,7 +17,10 @@ GET /groups/1/pupils/
 # All pupil's grades for specific subject within group.
 GET /groups/1/subjects/1/grades/
 
-# Set grade for specific pupil and subject within group.
-POST /groups/1/subjects/1/grades/
-{"pupil_id": 18, "value": 5}
+# Set grade for specific pupil and subject.
+POST /pupils/1/subjects/1/grades/
+{"value": 5}
 ```
+
+
+Группа Предмет Ученик Оценка 

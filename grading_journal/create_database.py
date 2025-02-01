@@ -1,8 +1,9 @@
 import asyncio
+import time
 
+from asyncpg import CannotConnectNowError
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-
 
 from grading_journal.database import Base
 from grading_journal.config import create_config
