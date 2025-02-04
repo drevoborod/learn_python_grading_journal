@@ -24,5 +24,14 @@ class Pupil(BaseModel, from_attributes=True):
     educational_group_id: int
 
 
+class Grade(BaseModel, from_attributes=True):
+    id: int
+    educational_subject_id: int
+    pupil_id: int
+    value: Literal[1, 2, 3, 4, 5]
+    educational_group_id: int
+    created_at: datetime
+
+
 class SetGrade(BaseModel):
     value: Literal[1, 2, 3, 4, 5]

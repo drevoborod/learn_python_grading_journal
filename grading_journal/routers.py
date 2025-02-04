@@ -3,9 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-from grading_journal.api_models import EducationalGroup, EducationalSubject, Pupil, SetGrade
+from grading_journal.api_models import EducationalGroup, EducationalSubject, Pupil, SetGrade, Grade
 from grading_journal.config import create_config
 from grading_journal.repos import GroupRepo, SubjectsRepo, PupilsRepo, GradesRepo
+
 
 router = APIRouter()
 
@@ -61,19 +62,19 @@ async def group_pupils(
     return [Pupil.model_validate(pupil) for pupil in pupils]
 
 
-# @router.get(
-#     "/groups/{group_id}/subjects/{subject_id}/grades/",
-#     summary="Get all pupil's grades for specific subject within group."
-# )
-# async def group_pupil_grade(
-#         db_session_fabric: Annotated[async_sessionmaker, Depends(database_session)],
-#         group_id: int,
-#         subject_id: int,
-# ) -> list[Pupil]:
-#     async with db_session_fabric() as session:
-#         g_repo = PupilsRepo(session)
-#         pupils = await g_repo.get_for_group(group_id)
-#     return [Pupil.model_validate(pupil) for pupil in pupils]
+@router.get(
+    "/groups/{group_id}/subjects/{subject_id}/grades/",
+    summary="Get all pupil's grades for specific subject within group."
+)
+async def group_grade(
+        db_session_fabric: Annotated[async_sessionmaker, Depends(database_session)],
+        group_id: int,
+        subject_id: int,
+) -> list[Grade]:
+    async with db_session_fabric() as session:
+        g_repo = GradesRepo(session)
+        grades = await g_repo.get_for_group_and_subject(group_id=group_id, subject_id=subject_id)
+    return [Grade.model_validate(grade) for grade in grades]
 
 @router.post(
     "/pupils/{pupil_id}/subjects/{subject_id}/grades/",

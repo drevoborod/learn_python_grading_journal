@@ -34,21 +34,12 @@ class GradesRepo(Repo):
         )
         return query.fetchall()
 
-#     async def get_for_group_and_subject(self, group_id: int, subject_id: int) -> Sequence[Grades]:
-#         query = await self.session.scalars(
-# """select eg."name", es."name", p.last_name, p.first_name, p.second_name, g.value
-# from grades g
-# join pupils p
-# on g.pupil_id = p.id
-# join educational_groups eg
-# on p.educational_group_id = eg.id
-# join educational_group_subjects egs
-# on eg.id = egs.educational_group_id
-# join educational_subjects es
-# on es.id = egs.educational_subject_id
-# where g.id = 1 and es.id = 2"""
-#         )
-#         return query.fetchall()
+    async def get_for_group_and_subject(self, group_id: int, subject_id: int) -> Sequence[Grades]:
+        query = await self.session.scalars(
+            select(Grades)
+            .filter_by(educational_group_id=group_id, educational_subject_id=subject_id)
+        )
+        return query.fetchall()
 
     async def set_for_pupil_and_subject(self, pupil_id: int, subject_id: int, value: Literal[1, 2, 3, 4, 5]) -> Grades:
         new_grade = Grades(educational_subject_id=subject_id, pupil_id=pupil_id, value=value)

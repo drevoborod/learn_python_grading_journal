@@ -23,4 +23,3 @@ POST /pupils/1/subjects/1/grades/
 ```
 
 
-Группа Предмет Ученик Оценка 

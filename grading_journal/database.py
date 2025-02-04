@@ -61,7 +61,9 @@ class Grades(Base):
     educational_subject_id = mapped_column(ForeignKey(EducationalSubjects.id))
     pupil_id = mapped_column(ForeignKey(Pupils.id))
     value: Mapped[int]
+    educational_group_id = mapped_column(ForeignKey(EducationalGroups.id))
     created_at = Column(DateTime, nullable=False, server_default=text("NOW()"))
 
     pupil: Mapped[Pupils] = relationship(lazy="selectin")
     educational_subject: Mapped[EducationalSubjects] = relationship(lazy="selectin")
+    group: Mapped[EducationalGroups] = relationship(lazy="selectin")
